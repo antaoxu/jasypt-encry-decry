@@ -32,7 +32,13 @@ public class EncryptController {
         if (password.equals("") || password == null){
             return EnumResult.ENCRY_OR_DECRY_PASSWORD_IS_BLANK.getMessage();
         }
-        return encryptor.decrypt(text,password);
+        String result = null;
+        try {
+            result = encryptor.decrypt(text, password);
+        }catch (Exception e){
+            return EnumResult.DECRY_OCCUR_ERROR.getCode();
+        }
+        return result;
     }
 }
 

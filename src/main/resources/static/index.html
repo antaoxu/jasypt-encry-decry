@@ -62,11 +62,15 @@
             <form>
                 <div class="form-group">
                     <label for="text">输入要加密/解密的文本：</label>
-                    <input type="text" class="form-control" id="text" placeholder="请输入文本" required>
+                    <input type="text" class="form-control" id="text" placeholder="请输入文本"
+                           pattern="[a-zA-Z0-9~!@#$%^&amp;*()_+`\-=\{\}\[\]|\\:;&quot;&lt;&gt;,.?\/]*"
+                           oninput="checkInput(this)" required autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="password">输入加密/解密密钥(一般填项目名称)：</label>
-                    <input type="text" class="form-control" id="password" placeholder="请输入密钥" required>
+                    <input type="text" class="form-control" id="password" placeholder="请输入密钥"
+                           pattern="[a-zA-Z0-9~!@#$%^&amp;*()_+`\-=\{\}\[\]|\\:;&quot;&lt;&gt;,.?\/]*"
+                           oninput="checkInput(this)" required autocomplete="off">
                 </div>
                 <div class="form-group">
                     <label for="algorithm">请选择加密算法：</label>
@@ -91,9 +95,10 @@
             </form>
         </div>
     </div>
+    <div id="copySuccessTip" class="copy-success"></div>
 </div>
 
-<div id="copySuccessTip" class="copy-success"></div>
+
 
 <!-- 引入jQuery和Bootstrap的JavaScript文件 -->
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
@@ -101,6 +106,20 @@
 <!-- 引入SweetAlert2脚本文件 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.1.4/dist/sweetalert2.min.js"></script>
 <script>
+    function checkInput(input) {
+        var chinese = /[\u4e00-\u9fa5]/g;
+        var text = input.value;
+        if (chinese.test(text)) {
+            Swal.fire({
+                icon: 'error',
+                title: '输入不能包含中文！',
+                showConfirmButton: false,
+                timer: 1500
+            });
+            input.value = text.slice(0, -1);
+        }
+    }
+
     function encrypt() {
         var text = $('#text').val();
         var password = $('#password').val();
@@ -169,7 +188,16 @@
             return;
         }
         $.post('/decrypt', {text: text, password: password, algorithm: algorithm}, function (data) {
-            $('#output').val(data);
+            if (data === '900002') {
+                Swal.fire({
+                    icon: 'error',
+                    title: '解密失败，请检查密钥！',
+                    showConfirmButton: false,
+                    timer: 1500
+                });
+            } else {
+                $('#output').val(data);
+            }
         });
     }
 

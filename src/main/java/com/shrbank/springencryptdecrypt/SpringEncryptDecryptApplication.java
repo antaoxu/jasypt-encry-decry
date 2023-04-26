@@ -17,15 +17,4 @@ public class SpringEncryptDecryptApplication  {
     public static void main(String[] args) {
         SpringApplication.run(SpringEncryptDecryptApplication.class, args);
     }
-
-   /* @Override
-    public void run(String... args) throws Exception {
-        Scanner sc = new Scanner(System.in);
-        //System.out.println("请输入要加密的明文：");
-        //String password = sc.next();
-        //System.out.println(password+" 加密后的密码为："+encryptor.encrypt(password));
-        System.out.println("请输入要解密的密文：");
-        String secret = sc.next();
-        System.out.println(secret+" 解密后的密码为: "+encryptor.decrypt(secret));
-    }*/
 }
